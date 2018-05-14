@@ -1,0 +1,29 @@
+endpoints:
+  shutdown:
+    enabled: true
+    sensitive: true
+    path: /shutdown
+
+management:
+  address: 127.0.0.1
+  port: 18060
+  security:
+    enabled: true
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka
+    registry-fetch-interval-seconds: 5
+security:
+  user:
+    name: admin
+    password: admin
+  basic:
+    enabled: true
+    path: ${endpoints.shutdown.path},/stop
+
+

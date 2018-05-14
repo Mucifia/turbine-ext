@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Turbine_Server
+
+server:
+  port: 8060
+
+turbine:
+  app-config: node01,node02
+  aggregator:
+    cluster-config: cluster1,cluster2
+  cluster-name-expression: metadata['cluster']
+
+logging:
+  pattern:
+    console: '[${spring.application.name}][%date][%level][%logger:%L]  %msg%n'
+    file: '[${spring.application.name}][%date][%level][%logger:%L]  %msg%n'
