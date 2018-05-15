@@ -38,7 +38,7 @@
     </fileSet>
     <fileSet>
       <directory>target</directory>
-      <outputDirectory>lib</outputDirectory>
+      <outputDirectory>libs</outputDirectory>
       <includes>
         <include>Turbine_Server.jar</include>
       </includes>
@@ -46,7 +46,7 @@
     </fileSet>
     <fileSet>
       <directory>src/main/resources</directory>
-      <outputDirectory>conf</outputDirectory>
+      <outputDirectory>configs</outputDirectory>
       <includes>
         <include>*.yml</include>
       </includes>
