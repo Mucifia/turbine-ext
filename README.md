@@ -6,13 +6,13 @@ Dynamic change setting in runtime
 Restful
 ------
   #### /appconfig
-  method = POST ，Content-Type ：application/json  , body : appserviceId
+  method = POST , Content-Type ：application/json  , body : appserviceId
 
   #### /appconfig/{serviceId}
   method = DELETE , Content-Type : application/json , Pathvariable : appserviceId
 
   #### /clusterconfig
-  method = POST ，Content-Type ：application/json  , body : appserviceId
+  method = POST , Content-Type ：application/json  , body : appserviceId
 
   #### /clusterconfig/{clustername}
   method = DELETE , Content-Type : application/json , Pathvariable : clustername
