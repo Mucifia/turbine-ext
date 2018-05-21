@@ -30,3 +30,9 @@ Restful
 
 3) https://www.jianshu.com/p/b7b20fc09ca9
 
+
+Java EventSource client example
+-----
+
+see https://github.com/ralscha/blog/tree/master/sse-client
+
