@@ -1,14 +1,12 @@
 package com.mmy.example.turbine.controller;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.mmy.example.turbine.service.TurbineConfigureService;
-import com.netflix.turbine.init.TurbineInit;
+
 import com.mmy.example.turbine.api.ITurbineConfigureService;
-import com.mmy.example.turbine.constants.TurbineConstants;
-import java.util.ArrayList;
-import java.util.List;
+import com.mmy.example.turbine.service.TurbinePropertyService;
+import com.netflix.turbine.init.TurbineInit;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.turbine.TurbineAggregatorProperties;
 import org.springframework.cloud.netflix.turbine.TurbineProperties;
@@ -25,66 +23,58 @@ import org.springframework.web.bind.annotation.RestController;
 public class TurbineConfigureServiceImpl implements ITurbineConfigureService {
 
 
-  private final Joiner joiner = Joiner.on(TurbineConstants.STRING_SEPARATE_COMMA);
-  private final Splitter splitter = Splitter.on(TurbineConstants.STRING_SEPARATE_COMMA)
-      .omitEmptyStrings();
+  private static final Log log = LogFactory.getLog(TurbineConfigureServiceImpl.class);
+
+
   @Autowired
   TurbineProperties turbineProperties;
   @Autowired
   TurbineAggregatorProperties turbineAggregatorProperties;
   @Autowired
-  TurbineConfigureService turbineConfigureService;
+  TurbinePropertyService turbinePropertyService;
 
   @Override
   public String addTurbineAppConfigItem(@RequestBody String serviceIds) {
     if (StringUtils.isBlank(serviceIds)) {
+      log.info("serviceIds shouldn't Empty ,add TurbineApp failed");
       return "fail";
     }
-    List appConfigList = new ArrayList<>(turbineProperties.getAppConfigList());
-    List serviceIdList = convertToList(serviceIds);
-    appConfigList.addAll(serviceIdList);
-    String appConfigString = convertToString(appConfigList);
-    turbineProperties.setAppConfig(appConfigString);
-    return "success";
+    String currentApps = turbinePropertyService.addTurbineAppConfig(serviceIds);
+    log.debug("add TurbineApp success, Current AppConfig are :" + currentApps);
+    return currentApps;
   }
 
   @Override
   public String deleteTurbineAppConfigItem(@PathVariable String serviceIds) {
     if (StringUtils.isBlank(serviceIds)) {
+      log.info("serviceIds shouldn't Empty ,delete TurbineApp failed");
       return "fail";
     }
-    List<String> appConfigList = new ArrayList<>(turbineProperties.getAppConfigList());
-    List serviceIdList = convertToList(serviceIds);
-    appConfigList.removeAll(serviceIdList);
-    String appConfigString = convertToString(appConfigList);
-    turbineProperties.setAppConfig(appConfigString);
-    return "success";
+    String currentApps = turbinePropertyService.deleteTurbineAppConfig(serviceIds);
+    log.info("delete TurbineApp success, Current AppConfig are :" + currentApps);
+    return currentApps;
   }
 
   @Override
   public String addTurbineClusterConfig(@RequestBody String clusters) {
     if (StringUtils.isBlank(clusters)) {
+      log.info("clusters shouldn't Empty ,add TurbineCluster failed");
       return "fail";
     }
-    List<String> clusterConfigList = turbineAggregatorProperties.getClusterConfig();
-    List clusterList = convertToList(clusters);
-    clusterConfigList.addAll(clusterList);
-    turbineConfigureService.loadClusterMonitor(clusterList);
-    turbineAggregatorProperties.setClusterConfig(clusterConfigList);
-    return "success";
+    String currentClusters = turbinePropertyService.addTurbineClusterConfig(clusters);
+    log.info("add TurbineApp success, Current ClusterConfig are :" + currentClusters);
+    return currentClusters;
   }
 
   @Override
   public String deleteTurbineClusterConfig(@PathVariable String clusters) {
     if (StringUtils.isBlank(clusters)) {
+      log.info("clusters shouldn't Empty ,delete TurbineCluster failed");
       return "fail";
     }
-    List<String> clusterConfigList = turbineAggregatorProperties.getClusterConfig();
-    List clusterList = convertToList(clusters);
-    clusterConfigList.removeAll(clusterList);
-    turbineConfigureService.removeClusterMonitor(clusterList);
-    turbineAggregatorProperties.setClusterConfig(clusterConfigList);
-    return "success";
+    String currentClusters = turbinePropertyService.deleteTurbineClusterCongfig(clusters);
+    log.info("delete TurbineApp success, Current ClusterConfig are :" + currentClusters);
+    return currentClusters;
   }
 
   @Override
@@ -108,13 +98,5 @@ public class TurbineConfigureServiceImpl implements ITurbineConfigureService {
   }
 
 
-  private List convertToList(String string) {
-    return splitter.splitToList(string);
-  }
-
-  private String convertToString(List list) {
-    return joiner.join(list);
-  }
-
-
 }
+
